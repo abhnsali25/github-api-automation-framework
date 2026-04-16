@@ -1,0 +1,21 @@
+import pytest
+import utils.logger
+from api.github_api import GitHubAPI
+from data.payloads import create_repo_payload  
+import time  
+
+@pytest.fixture(scope="module")
+def api():
+    return GitHubAPI()
+
+@pytest.fixture(scope="module")
+def repo_name():
+    return f"test-repo-{int(time.time())}"
+
+@pytest.fixture(scope="module")
+def created_repo(api, repo_name):
+    payload = create_repo_payload(repo_name)
+    response = api.create_repo(payload)
+
+    assert response.status_code == 201
+    return repo_name
